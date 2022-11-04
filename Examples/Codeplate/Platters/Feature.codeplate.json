@@ -1,0 +1,9 @@
+{
+  "config": ["config_filename", "config_testname"],
+  "platter": {
+    "__test__": {
+        "config_testname": ["test", {}, {"codeplate_filename": "config_filename"}]
+    },
+    "config_filename": ["component", {}, {"codeplate_filename": "config_filename"}]
+  }
+}

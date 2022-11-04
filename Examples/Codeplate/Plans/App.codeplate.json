@@ -1,0 +1,17 @@
+{
+  "App": {
+    "Banner": {
+      "Banner": ["component", {}, {"codeplate_filename": "Banner"}]
+    },
+    "Page": {
+      "Page": ["component", {}, {"codeplate_filename": "Page"}],
+      "MainContent": {
+        "MainContent": ["component", {"redux": true}, {"codeplate_filename": "MainContent"}]
+      },
+      "SideNav": {
+        "SideNav": ["feature", {"platter": true}, {"config_filename": "SideNav", "config_testname": "SideNavTest"}],
+        "SideNav.styles":["BasicComponent.codeplate.styles.js", {}, {"codeplate_stylesObjectName": "styles"}]
+      }
+    }
+  }
+}
