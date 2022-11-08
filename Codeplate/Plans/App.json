@@ -10,7 +10,7 @@
       },
       "SideNav": {
         "SideNav": ["feature", {"platter": true}, {"config_filename": "SideNav", "config_testname": "SideNavTest"}],
-        "SideNav.styles":["BasicComponent.codeplate.styles.js", {}, {"codeplate_stylesObjectName": "styles"}]
+        "SideNav.styles":["BasicComponent.styles.js", {}, {"codeplate_stylesObjectName": "styles"}]
       }
     }
   }

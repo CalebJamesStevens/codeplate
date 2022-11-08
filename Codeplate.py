@@ -1,5 +1,5 @@
 import re
-import inquirer
+#import
 import json
 import os
 import re
@@ -27,7 +27,7 @@ def getFileData(fileName, fileType):
   elif fileType == "tpl":
     configDefault = 'templates'
     codeplateDir = 'Templates'
-  
+
   if re.search('\.', fileName):
     with open(os.path.join(__location__, f'Codeplate/{codeplateDir}/{fileName}'), 'r') as _file:
         fileData=_file.read()
@@ -37,7 +37,7 @@ def getFileData(fileName, fileType):
     with open(os.path.join(__location__, f'Codeplate/{codeplateDir}/{nameOfRef}'), 'r') as _file:
         fileData=_file.read()
     return {"fileData": fileData, "fileName": nameOfRef}
-    
+
 # Code for replacing variable names in a platter
 def replacePlatterVars(data, variables, answers):
   keys = data.copy().keys()
@@ -69,7 +69,7 @@ def createPlan(data, parent =__location__):
     if isinstance(data[key], list):
       if "platter" in data[key][1] and data[key][1]["platter"] == True:
         createPlatter(parent, data[key][0], data[key][2])
-      else: 
+      else:
         createTemplate(data[key][0], key, data[key][2], parent)
 
 def createPlatter(parent =__location__, platterRef ="", answers ={}):
@@ -88,23 +88,30 @@ def raplaceTemplateVariables(data, answers, fileName):
   for attribute in dedupedAttributes.keys():
     if attribute not in answers:
       answers[attribute] = input(f'Variable {attribute} not supplied for {fileName}.\nWhat will be it\'s value?\n')
-  
+
   for attribute in dedupedAttributes:
     replacedData = re.sub(attribute, answers[attribute], replacedData)
-  
+
   return replacedData
 
 def createTemplate(templateName ='', newFileName ='', answers ={}, parent=__location__):
   data = getFileData(templateName, 'tpl')
-  
-  dataToWrite = raplaceTemplateVariables(data["fileData"], answers, data["fileName"])
 
-  extenstion = re.sub("(.*?)[^\.]*", '', newFileName, 1)
-  extenstion = re.sub("\.", '\.', extenstion)
-  name = re.sub(f".*codeplate{extenstion}", newFileName, data["fileName"])
+  extension = "."+re.sub(".*?[\.]", '', newFileName, 1)
+  givenBaseName = re.sub('\..*', '', newFileName)
+  templateExtenstion = "."+re.sub(".*?[\.]", '', data["fileName"], 1)
+
+
+  name = ''
+  if f'{givenBaseName}{extension}' == f'{givenBaseName}{templateExtenstion}':
+      name = newFileName
+  else:
+      name = f'{newFileName}{templateExtenstion}'
+
+  dataToWrite = raplaceTemplateVariables(data["fileData"], answers, name)
 
   fileToWrite = open(os.path.join(parent, name), "a")
-  
+
   fileToWrite.write(dataToWrite)
   fileToWrite.close()
 
@@ -131,20 +138,16 @@ elif sys.argv[1] == "tpl":
       filename = re.sub("filename=", '', i)
     if re.search("directory=", i):
       directory = re.sub("directory=", '', i)
-      
+
   if filename == '':
-    filename = input("Filename: ")
+    filename = input("Filename:\n")
 
-  if not directory == '':
-    if re.search("\/", directory):
+  # if not directory == '':
+  #   if re.search("\/", directory):
+  #
+  #   else:
+  #     directory = config["directories"][directory]
 
-    else:
-      directory = config["directories"][directory]
-
-  createTemplate(sys.argv[2], filename, answers parent=os.path.join(__location__, directory))
+  createTemplate(sys.argv[2], filename, answers, parent=os.path.join(__location__, directory))
 else:
-  print('Please provide a type. Ex: python3 codeplate.py tpl BasicComponent.codeplate.js')
-
-
-
-
+  print('Please provide a type. Ex: python3 Codeplate.py tpl BasicComponent.js')
